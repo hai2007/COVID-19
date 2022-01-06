@@ -2,7 +2,7 @@
     <img src='./view.png' />
 </p>
 
-# COVID-19
+# [COVID-19](https://hai2007.github.io/COVID-19/)
 新型冠状病毒肺炎（Corona Virus Disease 2019，COVID-19）可视化监控室项目。
 
 > 郑重声明：本项目使用的地图数据中未包含的南海等岛屿和领海属于中国领土~

@@ -1,1 +1,23 @@
-<ui-map :geo-json='chinaGeoJSON' font-color='black' stroke-color='gray' :fill-color='calcColor'/>
+<!-- 地图 -->
+
+<ui-map :geo-json='chinaGeoJSON' font-color='black' stroke-color='gray' :fill-color='calcColor' />
+
+<!-- 图标 -->
+
+<rect x='50' y='405' width='20' height='10' fill-color='#7a361f'></rect>
+<text x='80' y='410' font-size='10'>≥10000</text>
+
+<rect x='50' y='420' width='20' height='10' fill-color='#c95539'></rect>
+<text x='80' y='425' font-size='10'>≥1000</text>
+
+<rect x='50' y='435' width='20' height='10' fill-color='#f77649'></rect>
+<text x='80' y='440' font-size='10'>≥500</text>
+
+<rect x='50' y='450' width='20' height='10' fill-color='#f8a077'></rect>
+<text x='80' y='455' font-size='10'>≥100</text>
+
+<rect x='50' y='465' width='20' height='10' fill-color='#f9c8b1'></rect>
+<text x='80' y='470' font-size='10'>≥10</text>
+
+<rect x='50' y='480' width='20' height='10' fill-color='#f5e6de'></rect>
+<text x='80' y='485' font-size='10'>≥1</text>

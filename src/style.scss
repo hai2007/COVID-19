@@ -1,3 +1,40 @@
-body{
+body {
     background-color: aliceblue;
+}
+
+.hover {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #ffffffda;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.6em;
+    color: rgb(0, 0, 0);
+    box-shadow: 0 0 10px 0 grey;
+    width: 300px;
+    pointer-events: none;
+
+    &[show='no'] {
+        display: none;
+    }
+
+    &>h2 {
+        font-size: inherit;
+    }
+
+    &>ul {
+        &>li {
+
+            display: inline-block;
+            width: 50%;
+
+            &::before {
+                content: "◆";
+                margin-right: 5px;
+            }
+        }
+    }
+
 }

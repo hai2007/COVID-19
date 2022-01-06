@@ -1927,7 +1927,7 @@ window.__etcpack__bundleSrc__['3']=function(){
 window.__etcpack__bundleSrc__['4']=function(){
     var __etcpack__scope_bundle__={};
     var __etcpack__scope_args__;
-    __etcpack__scope_bundle__.default= "\n body{\n\nbackground-color: aliceblue;\n\n}\n"
+    __etcpack__scope_bundle__.default= "\n body{\n\nbackground-color: aliceblue;\n\n}\n\n .hover{\n\nposition: absolute;\n\nleft: 0;\n\ntop: 0;\n\nbackground-color: #ffffffda;\n\nborder-radius: 5px;\n\npadding: 5px 10px;\n\nfont-size: 12px;\n\nline-height: 1.6em;\n\ncolor: rgb(0, 0, 0);\n\nbox-shadow: 0 0 10px 0 grey;\n\nwidth: 300px;\n\npointer-events: none;\n\n}\n\n .hover[show='no']{\n\ndisplay: none;\n\n}\n\n .hover>h2{\n\nfont-size: inherit;\n\n}\n\n .hover>ul>li{\n\ndisplay: inline-block;\n\nwidth: 50%;\n\n}\n\n .hover>ul>li::before{\n\ncontent: \"◆\";\n\nmargin-right: 5px;\n\n}\n"
   
     return __etcpack__scope_bundle__;
 }
@@ -2799,6 +2799,12 @@ window.__etcpack__bundleSrc__['19']=function(){
     var __etcpack__scope_args__;
     var _dec, _class2;
 
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -2845,6 +2851,14 @@ var _class = (_dec = Component({
     _defineProperty(this, "process", void 0);
 
     _defineProperty(this, "hadLoad", void 0);
+
+    _defineProperty(this, "flag", void 0);
+
+    _defineProperty(this, "left", void 0);
+
+    _defineProperty(this, "top", void 0);
+
+    _defineProperty(this, "title", void 0);
   }
 
   _createClass(_class2, [{
@@ -2852,14 +2866,41 @@ var _class = (_dec = Component({
     value: function $setup() {
       return {
         process: ref(0),
-        hadLoad: ref(false)
+        hadLoad: ref(true),
+        flag: ref(false),
+        left: ref(0),
+        top: ref(0),
+        title: ref('')
       };
+    }
+  }, {
+    key: "evalCallback",
+    value: function evalCallback(_data, callback) {
+      var chinaData = {};
+
+      for (var i = 0; i < _data.results.length; i++) {
+        if (_data.results[i].countryEnglishName == 'China') {
+          chinaData[_data.results[i].provinceShortName] = _data.results[i];
+        }
+      }
+
+      callback({
+        chinaData: chinaData
+      });
     }
   }, {
     key: "getData",
     value: function getData(callback) {
       var _this = this;
 
+      var data = sessionStorage.getItem("covid-19/area");
+
+      if (data) {
+        this.evalCallback(JSON.parse(data), callback);
+        return;
+      }
+
+      this.hadLoad = false;
       xhr({
         method: "GET",
         url: "https://lab.isaaclin.cn/nCoV/api/area",
@@ -2876,20 +2917,9 @@ var _class = (_dec = Component({
       }, function (data) {
         _this.hadLoad = true;
 
-        var _data = JSON.parse(data.data); // 分析出中国的数据
+        _this.evalCallback(JSON.parse(data.data), callback);
 
-
-        var chinaData = {};
-
-        for (var i = 0; i < _data.results.length; i++) {
-          if (_data.results[i].countryEnglishName == 'China') {
-            chinaData[_data.results[i].provinceShortName] = _data.results[i];
-          }
-        }
-
-        callback({
-          chinaData: chinaData
-        });
+        sessionStorage.setItem("covid-19/area", data.data);
       }, function (error) {
         // 错误回调
         console.error(error);
@@ -2899,13 +2929,18 @@ var _class = (_dec = Component({
   }, {
     key: "$mounted",
     value: function $mounted() {
+      var _this2 = this;
+
       this.getData(function (data) {
         new Clunch({
           el: document.getElementById('map'),
           render: image,
           data: function data() {
             return {
-              chinaGeoJSON: chinaGeoJSON
+              chinaGeoJSON: chinaGeoJSON,
+              hoverData: {
+                flag: false
+              }
             };
           },
           methods: {
@@ -2928,6 +2963,39 @@ var _class = (_dec = Component({
                 return "white";
               }
             }
+          }
+        }).$bind('mousemove', function (target) {
+          if (target.region) {
+            var _title = target.data.properties.name;
+            var curData = data.chinaData[_title]; // 右边有空余的地方就右边显示，不然去左边
+
+            _this2.left = target.left > window.innerWidth * 0.5 ? target.left - 310 : target.left + 10;
+            _this2.top = target.top - curData.cities.length * 5;
+
+            if (_this2.title != _title) {
+              _this2.title = _title;
+              var _template = '';
+
+              var _iterator = _createForOfIteratorHelper(curData.cities),
+                  _step;
+
+              try {
+                for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                  var city = _step.value;
+                  _template += "<li>".concat(city.cityName, " : ").concat(city.currentConfirmedCount, "</li>");
+                }
+              } catch (err) {
+                _iterator.e(err);
+              } finally {
+                _iterator.f();
+              }
+
+              document.getElementById('hover-list').innerHTML = _template;
+            }
+
+            _this2.flag = true;
+          } else {
+            _this2.flag = false;
           }
         });
       });
@@ -3441,7 +3509,7 @@ window.__etcpack__bundleSrc__['25']=function(){
     var __etcpack__scope_bundle__={};
     var __etcpack__scope_args__;
     
-    __etcpack__scope_bundle__.default= [{"name":"ui-map","attrs":{":geo-json":"chinaGeoJSON","font-color":"black","stroke-color":"gray",":fill-color":"calcColor"},"children":[]}];
+    __etcpack__scope_bundle__.default= [{"name":"ui-map","attrs":{":geo-json":"chinaGeoJSON","font-color":"black","stroke-color":"gray",":fill-color":"calcColor"},"children":[]},{"name":"rect","attrs":{"x":"50","y":"405","width":"20","height":"10","fill-color":"#7a361f"},"children":[]},{"name":"text","attrs":{"x":"80","y":"410","font-size":"10"},"children":["≥10000"]},{"name":"rect","attrs":{"x":"50","y":"420","width":"20","height":"10","fill-color":"#c95539"},"children":[]},{"name":"text","attrs":{"x":"80","y":"425","font-size":"10"},"children":["≥1000"]},{"name":"rect","attrs":{"x":"50","y":"435","width":"20","height":"10","fill-color":"#f77649"},"children":[]},{"name":"text","attrs":{"x":"80","y":"440","font-size":"10"},"children":["≥500"]},{"name":"rect","attrs":{"x":"50","y":"450","width":"20","height":"10","fill-color":"#f8a077"},"children":[]},{"name":"text","attrs":{"x":"80","y":"455","font-size":"10"},"children":["≥100"]},{"name":"rect","attrs":{"x":"50","y":"465","width":"20","height":"10","fill-color":"#f9c8b1"},"children":[]},{"name":"text","attrs":{"x":"80","y":"470","font-size":"10"},"children":["≥10"]},{"name":"rect","attrs":{"x":"50","y":"480","width":"20","height":"10","fill-color":"#f5e6de"},"children":[]},{"name":"text","attrs":{"x":"80","y":"485","font-size":"10"},"children":["≥1"]}];
 
   
     return __etcpack__scope_bundle__;
@@ -3453,7 +3521,7 @@ window.__etcpack__bundleSrc__['25']=function(){
 window.__etcpack__bundleSrc__['26']=function(){
     var __etcpack__scope_bundle__={};
     var __etcpack__scope_args__;
-    __etcpack__scope_bundle__.default= "\n .view{\n\nmargin: auto;\n\nwidth: 700px;\n\nmin-height: 100vh;\n\nbackground-color: white;\n\npadding: 20px 0;\n\n}\n\n .view>header{\n\ntext-align: center;\n\nfont-size: 30px;\n\n}\n\n .view>header>span{\n\ncolor: red;\n\nfont-size: 12px;\n\nfont-weight: 800;\n\npadding-left: 10px;\n\n}\n\n .view>#map{\n\nheight: 500px;\n\n}\n\n .process{\n\ncolor: rgb(0, 0, 0);\n\ntop: calc(50vh - 25px);\n\nleft: calc(50vw - 250px);\n\nposition: fixed;\n\ntext-align: center;\n\nwidth: 500px;\n\nheight: 50px;\n\n}\n\n .process>span.icon{\n\nborder: 2px solid gray;\n\nborder-radius: 10px;\n\nwidth: 300px;\n\nheight: 24px;\n\npadding: 2px;\n\ndisplay: inline-block;\n\ntext-align: left;\n\nmargin-bottom: 10px;\n\n}\n\n .process>span.icon>i{\n\nbackground-color: #73c944;\n\ndisplay: inline-block;\n\nheight: 16px;\n\nborder-radius: 10px;\n\n}\n\n .process[load='yes']{\n\ndisplay: none;\n\n}\n"
+    __etcpack__scope_bundle__.default= "\n .view{\n\nmargin: auto;\n\nwidth: 700px;\n\nmin-height: 100vh;\n\nbackground-color: white;\n\npadding: 20px 0;\n\n}\n\n .view>header{\n\ntext-align: center;\n\nfont-size: 30px;\n\n}\n\n .view>header>span{\n\ncolor: red;\n\nfont-size: 12px;\n\nfont-weight: 800;\n\npadding-left: 10px;\n\n}\n\n .view>div{\n\nposition: relative;\n\n}\n\n .view>div #map{\n\nheight: 500px;\n\n}\n\n .process{\n\ncolor: rgb(0, 0, 0);\n\ntop: calc(50vh - 25px);\n\nleft: calc(50vw - 250px);\n\nposition: fixed;\n\ntext-align: center;\n\nwidth: 500px;\n\nheight: 50px;\n\n}\n\n .process>span.icon{\n\nborder: 2px solid gray;\n\nborder-radius: 10px;\n\nwidth: 300px;\n\nheight: 24px;\n\npadding: 2px;\n\ndisplay: inline-block;\n\ntext-align: left;\n\nmargin-bottom: 10px;\n\n}\n\n .process>span.icon>i{\n\nbackground-color: #73c944;\n\ndisplay: inline-block;\n\nheight: 16px;\n\nborder-radius: 10px;\n\n}\n\n .process[load='yes']{\n\ndisplay: none;\n\n}\n"
   
     return __etcpack__scope_bundle__;
 }
@@ -3464,7 +3532,7 @@ window.__etcpack__bundleSrc__['26']=function(){
 window.__etcpack__bundleSrc__['27']=function(){
     var __etcpack__scope_bundle__={};
     var __etcpack__scope_args__;
-    __etcpack__scope_bundle__.default= "<div class=\"view\">\n    <header>\n        新型冠状病毒肺炎\n        <span>\n            COVID-19\n        </span>\n    </header>\n    <div id=\"map\"></div>\n</div>\n\n<div class=\"process\" ui-bind:load='hadLoad?\"yes\":\"no\"'>\n    <span class='icon'>\n        <i ui-bind:style='\"width:\"+process+\"%\"'></i>\n    </span>\n    <br />\n    <span ui-bind='\"统计数据载入中：\"+process+\"%\"'></span>\n</div>\n"
+    __etcpack__scope_bundle__.default= "<div class=\"view\">\n    <header>\n        新型冠状病毒肺炎\n        <span>\n            COVID-19\n        </span>\n    </header>\n    <div>\n        <div id=\"map\"></div>\n        <div class=\"hover\" ui-bind:style='\"left:\"+left+\"px;top:\"+top+\"px;\"' ui-bind:show='flag?\"yes\":\"no\"'>\n            <h2 ui-bind='title'>简单</h2>\n            <ul id='hover-list'></ul>\n        </div>\n    </div>\n</div>\n\n<div class=\"process\" ui-bind:load='hadLoad?\"yes\":\"no\"'>\n    <span class='icon'>\n        <i ui-bind:style='\"width:\"+process+\"%\"'></i>\n    </span>\n    <br />\n    <span ui-bind='\"统计数据载入中：\"+process+\"%\"'></span>\n</div>\n"
   
     return __etcpack__scope_bundle__;
 }

@@ -21,15 +21,44 @@ export default class {
 
     process: number
     hadLoad: boolean
+    flag: boolean
+    left: number
+    top: number
+    title: any
 
     $setup() {
         return {
             process: ref(0),
-            hadLoad: ref(false)
+            hadLoad: ref(true),
+            flag: ref(false),
+            left: ref(0),
+            top: ref(0),
+            title: ref('')
         }
     }
 
+    evalCallback(_data, callback) {
+        let chinaData = {}
+        for (let i = 0; i < _data.results.length; i++) {
+            if (_data.results[i].countryEnglishName == 'China') {
+                chinaData[_data.results[i].provinceShortName] = _data.results[i]
+            }
+        }
+        callback({
+            chinaData
+        })
+    }
+
     getData(callback) {
+
+        let data = sessionStorage.getItem("covid-19/area")
+        if (data) {
+            this.evalCallback(JSON.parse(data), callback)
+            return
+        }
+
+        this.hadLoad = false
+
         xhr({
             method: "GET",
             url: "https://lab.isaaclin.cn/nCoV/api/area",
@@ -44,20 +73,10 @@ export default class {
         }, data => {
 
             this.hadLoad = true
+            this.evalCallback(JSON.parse(data.data), callback)
 
-            let _data = JSON.parse(data.data)
+            sessionStorage.setItem("covid-19/area", data.data);
 
-            // 分析出中国的数据
-            let chinaData = {}
-            for (let i = 0; i < _data.results.length; i++) {
-                if (_data.results[i].countryEnglishName == 'China') {
-                    chinaData[_data.results[i].provinceShortName] = _data.results[i]
-                }
-            }
-
-            callback({
-                chinaData
-            })
         }, (error) => {
 
             // 错误回调
@@ -76,7 +95,10 @@ export default class {
                 render: image,
                 data() {
                     return {
-                        chinaGeoJSON
+                        chinaGeoJSON,
+                        hoverData: {
+                            flag: false
+                        }
                     }
                 },
                 methods: {
@@ -100,6 +122,34 @@ export default class {
                         }
                     }
                 }
+            }).$bind('mousemove', target => {
+
+                if (target.region) {
+
+                    let _title = target.data.properties.name
+                    let curData = data.chinaData[_title]
+
+                    // 右边有空余的地方就右边显示，不然去左边
+                    this.left = target.left > (window.innerWidth * 0.5) ? (target.left - 310) : (target.left + 10)
+                    this.top = target.top - curData.cities.length * 5
+
+                    if (this.title != _title) {
+
+                        this.title = _title
+
+                        let template = ''
+                        for (let city of curData.cities) {
+                            template += `<li>${city.cityName} : ${city.currentConfirmedCount}</li>`
+                        }
+                        document.getElementById('hover-list').innerHTML = template
+                    }
+
+                    this.flag = true
+
+                } else {
+                    this.flag = false
+                }
+
             })
 
         })

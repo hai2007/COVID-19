@@ -5,7 +5,13 @@
             COVID-19
         </span>
     </header>
-    <div id="map"></div>
+    <div>
+        <div id="map"></div>
+        <div class="hover" ui-bind:style='"left:"+left+"px;top:"+top+"px;"' ui-bind:show='flag?"yes":"no"'>
+            <h2 ui-bind='title'>简单</h2>
+            <ul id='hover-list'></ul>
+        </div>
+    </div>
 </div>
 
 <div class="process" ui-bind:load='hadLoad?"yes":"no"'>

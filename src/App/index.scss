@@ -17,8 +17,11 @@
         }
     }
 
-    &>#map {
-        height: 500px;
+    &>div{
+        position: relative;
+        #map {
+            height: 500px;
+        }
     }
 }
 
