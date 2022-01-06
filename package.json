@@ -1,0 +1,30 @@
+{
+  "name": "covid-19",
+  "version": "0.1.0",
+  "description": "新型冠状病毒肺炎（Corona Virus Disease 2019，COVID-19）可视化监控室项目。",
+  "scripts": {
+    "build": "nodejs -e build && etcpack_pkg --config etcpack.prod.js",
+    "dev": "etcpack_dev --config etcpack.dev.js"
+  },
+  "dependencies": {
+    "@hai2007/polyfill": "^0.2.0",
+    "@hai2007/style": "^0.3.0",
+    "nefbl": "^0.2.6",
+    "puly": "^0.1.0",
+    "sprout-ui": "^0.2.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@babel/plugin-proposal-decorators": "^7.16.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.16.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-typescript": "^7.16.0",
+    "@etcpack/commonjs-plug": "^0.1.0",
+    "@etcpack/plain-loader": "^0.1.0",
+    "@etcpack/scss-loader": "^0.1.2",
+    "@hai2007/nodejs": "^2.2.0",
+    "etcpack": "^0.5.2",
+    "tslib": "^2.3.1"
+  }
+}
