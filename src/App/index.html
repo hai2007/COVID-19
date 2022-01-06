@@ -1,0 +1,17 @@
+<div class="view">
+    <header>
+        新型冠状病毒肺炎
+        <span>
+            COVID-19
+        </span>
+    </header>
+    <div id="map"></div>
+</div>
+
+<div class="process" ui-bind:load='hadLoad?"yes":"no"'>
+    <span class='icon'>
+        <i ui-bind:style='"width:"+process+"%"'></i>
+    </span>
+    <br />
+    <span ui-bind='"统计数据载入中："+process+"%"'></span>
+</div>

@@ -1,0 +1,1 @@
+<ui-map :geo-json='chinaGeoJSON' font-color='black' stroke-color='gray' :fill-color='calcColor'/>

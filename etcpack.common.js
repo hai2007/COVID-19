@@ -21,6 +21,9 @@ module.exports = {
         test: /\.html$/,
         handler: ['@etcpack/plain-loader']
     }, {
+        test: /\.clunch$/,
+        handler: ['clunch/loader.js']
+    }, {
         test: /\.(ts|js)$/,
         handler: [function (source) {
             if (/node_modules/.test(this.filepath) && !/sprout-ui/.test(this.filepath)) return source;
