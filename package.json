@@ -1,6 +1,6 @@
 {
   "name": "covid-19",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "新型冠状病毒肺炎（Corona Virus Disease 2019，COVID-19）可视化监控室项目。",
   "scripts": {
     "build": "nodejs -e build && etcpack_pkg --config etcpack.prod.js",
@@ -13,7 +13,7 @@
     "@hai2007/style": "^0.3.0",
     "@hai2007/tool": "^1.1.0",
     "@hai2007/xhr": "^0.1.2",
-    "clunch": "^2.3.5",
+    "clunch": "^2.3.6",
     "nefbl": "^0.2.6",
     "sprout-ui": "^0.2.2"
   },
@@ -28,7 +28,7 @@
     "@etcpack/plain-loader": "^0.1.0",
     "@etcpack/scss-loader": "^0.1.2",
     "@hai2007/nodejs": "^2.2.0",
-    "etcpack": "^0.5.2",
+    "etcpack": "^0.5.4",
     "tslib": "^2.3.1"
   }
 }

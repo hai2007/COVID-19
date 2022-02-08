@@ -88,6 +88,7 @@ export default class {
 
     $mounted() {
 
+        let _this = this
         this.getData(data => {
 
             new Clunch({
@@ -122,20 +123,24 @@ export default class {
                         }
                     }
                 }
-            }).$bind('mousemove', target => {
+            }).$bind('mousemove', function (target) {
 
                 if (target.region) {
 
-                    let _title = target.data.properties.name
-                    let curData = data.chinaData[_title]
+                    let _cityName = target.data.properties.name
+
+                    let curData = data.chinaData[_cityName]
+                    let _title = _cityName + "(" + curData.currentConfirmedCount + ")"
+
+                    console.log(curData)
 
                     // 右边有空余的地方就右边显示，不然去左边
-                    this.left = target.left > (window.innerWidth * 0.5) ? (target.left - 310) : (target.left + 10)
-                    this.top = target.top - curData.cities.length * 5
+                    _this.left = target.left > (this._width * 0.5) ? (target.left - 310) : (target.left + 10)
+                    _this.top = target.top - curData.cities.length * 5
 
-                    if (this.title != _title) {
+                    if (_this.title != _title) {
 
-                        this.title = _title
+                        _this.title = _title
 
                         let template = ''
                         for (let city of curData.cities) {
@@ -144,10 +149,10 @@ export default class {
                         document.getElementById('hover-list').innerHTML = template
                     }
 
-                    this.flag = true
+                    _this.flag = true
 
                 } else {
-                    this.flag = false
+                    _this.flag = false
                 }
 
             })

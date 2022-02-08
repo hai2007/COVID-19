@@ -4,6 +4,7 @@
     min-height: 100vh;
     background-color: white;
     padding: 20px 0;
+    padding-top: 70px;
 
     &>header {
         text-align: center;
@@ -57,4 +58,15 @@
     &[load='yes'] {
         display: none;
     }
+}
+
+.tips{
+    position: fixed;
+    left:0;
+    top:0;
+    font-size: 12px;
+    text-align: center;
+    width:100vw;
+    background-color: #a6b10a88;
+    padding:10px 0;
 }
