@@ -1927,7 +1927,7 @@ window.__etcpack__bundleSrc__['3']=function(){
 window.__etcpack__bundleSrc__['4']=function(){
     var __etcpack__scope_bundle__={};
     var __etcpack__scope_args__;
-    __etcpack__scope_bundle__.default= "\n body{\n\nbackground-color: aliceblue;\n\n}\n\n .hover{\n\nposition: absolute;\n\nleft: 0;\n\ntop: 0;\n\nbackground-color: #ffffffda;\n\nborder-radius: 5px;\n\npadding: 5px 10px;\n\nfont-size: 12px;\n\nline-height: 1.6em;\n\ncolor: rgb(0, 0, 0);\n\nbox-shadow: 0 0 10px 0 grey;\n\nwidth: 300px;\n\npointer-events: none;\n\n}\n\n .hover[show='no']{\n\ndisplay: none;\n\n}\n\n .hover>h2{\n\nfont-size: inherit;\n\n}\n\n .hover>ul>li{\n\ndisplay: inline-block;\n\nwidth: 50%;\n\n}\n\n .hover>ul>li::before{\n\ncontent: \"◆\";\n\nmargin-right: 5px;\n\n}\n"
+    __etcpack__scope_bundle__.default= "\n body{\n\nbackground-color: aliceblue;\n\n}\n\n .hover{\n\nposition: absolute;\n\nleft: 0;\n\ntop: 0;\n\nbackground-color: #ffffffda;\n\nborder-radius: 5px;\n\npadding: 5px 10px;\n\nfont-size: 12px;\n\nline-height: 1.6em;\n\ncolor: rgb(0, 0, 0);\n\nbox-shadow: 0 0 10px 0 grey;\n\nwidth: 300px;\n\npointer-events: none;\n\n}\n\n .hover[show='no']{\n\ndisplay: none;\n\n}\n\n .hover>h2{\n\nfont-size: inherit;\n\n}\n\n .hover>ul>li{\n\ndisplay: inline-block;\n\nwidth: 50%;\n\n}\n\n .hover>ul>li::before{\n\ncontent: \"◆\";\n\nmargin-right: 5px;\n\n}\n\n/* // 谣言 */\n\n .rumors{\n\nwidth: 90%;\n\nmargin: auto;\n\nline-height: 20px;\n\nmargin-top: 50px;\n\n}\n\n .rumors thead{\n\nwhite-space: nowrap;\n\n}\n\n .rumors thead>tr{\n\nbackground-color: #c1bcbc;\n\nborder: 1px solid #c1bcbc;\n\ncolor: #fff;\n\n}\n\n .rumors tbody>tr>*{\n\nborder-width: 0 1px 1px 0;\n\nborder-style: solid;\n\nborder-color: #c1bcbc;\n\n}\n\n .rumors tbody>tr>*:first-child{\n\nborder-width: 0 1px 1px 1px;\n\n}\n\n .rumors tbody>tr:nth-child(2n){\n\nbackground-color: #F5F5F5;\n\n}\n\n .rumors tbody>tr:nth-child(2n+1){\n\nbackground-color: #fff;\n\n}\n\n .rumors th{\n\nfont-size: 12px;\n\npadding-left: 1em;\n\n}\n"
   
     return __etcpack__scope_bundle__;
 }
@@ -2776,9 +2776,12 @@ var uiModel =__etcpack__scope_args__.default;
 __etcpack__scope_args__=window.__etcpack__getBundle('31');
 var uiOn =__etcpack__scope_args__.default;
 
+__etcpack__scope_args__=window.__etcpack__getBundle('32');
+var uiRumors =__etcpack__scope_args__.default;
+
 
 var _class = (_dec = Module({
-  declarations: [AppComponent, uiBind, uiModel, uiOn],
+  declarations: [AppComponent, uiBind, uiModel, uiOn, uiRumors],
   imports: [],
   exports: [],
   bootstrap: AppComponent
@@ -2859,6 +2862,8 @@ var _class = (_dec = Component({
     _defineProperty(this, "top", void 0);
 
     _defineProperty(this, "title", void 0);
+
+    _defineProperty(this, "rumors", void 0);
   }
 
   _createClass(_class2, [{
@@ -2870,7 +2875,8 @@ var _class = (_dec = Component({
         flag: ref(false),
         left: ref(0),
         top: ref(0),
-        title: ref('')
+        title: ref(''),
+        rumors: ref({})
       };
     }
   }, {
@@ -2927,6 +2933,29 @@ var _class = (_dec = Component({
       });
     }
   }, {
+    key: "getRumorsData",
+    value: function getRumorsData() {
+      var _this3 = this;
+
+      var data = sessionStorage.getItem("covid-19/rumors");
+
+      if (data) {
+        this.rumors = JSON.parse(data);
+        return;
+      }
+
+      xhr({
+        method: "GET",
+        url: "https://lab.isaaclin.cn/nCoV/api/rumors",
+        timeout: 60000
+      }, function (data) {
+        _this3.rumors = JSON.parse(data.data);
+        sessionStorage.setItem("covid-19/rumors", data.data);
+      }, function (error) {
+        console.error(error);
+      });
+    }
+  }, {
     key: "$mounted",
     value: function $mounted() {
       var _this = this;
@@ -2969,9 +2998,8 @@ var _class = (_dec = Component({
             var _cityName = target.data.properties.name;
             var curData = data.chinaData[_cityName];
 
-            var _title = _cityName + "(" + curData.currentConfirmedCount + ")";
+            var _title = _cityName + "(" + curData.currentConfirmedCount + ")"; // 右边有空余的地方就右边显示，不然去左边
 
-            console.log(curData); // 右边有空余的地方就右边显示，不然去左边
 
             _this.left = target.left > this._width * 0.5 ? target.left - 310 : target.left + 10;
             _this.top = target.top - curData.cities.length * 5;
@@ -3003,6 +3031,7 @@ var _class = (_dec = Component({
           }
         });
       });
+      this.getRumorsData();
     }
   }]);
 
@@ -3536,7 +3565,7 @@ window.__etcpack__bundleSrc__['26']=function(){
 window.__etcpack__bundleSrc__['27']=function(){
     var __etcpack__scope_bundle__={};
     var __etcpack__scope_args__;
-    __etcpack__scope_bundle__.default= "<div class=\"view\">\n    <header>\n        新型冠状病毒肺炎\n        <span>\n            COVID-19\n        </span>\n    </header>\n    <div>\n        <div id=\"map\"></div>\n        <div class=\"hover\" ui-bind:style='\"left:\"+left+\"px;top:\"+top+\"px;\"' ui-bind:show='flag?\"yes\":\"no\"'>\n            <h2 ui-bind='title'>简单</h2>\n            <ul id='hover-list'></ul>\n        </div>\n    </div>\n</div>\n\n<div class=\"process\" ui-bind:load='hadLoad?\"yes\":\"no\"'>\n    <span class='icon'>\n        <i ui-bind:style='\"width:\"+process+\"%\"'></i>\n    </span>\n    <br />\n    <span ui-bind='\"统计数据载入中：\"+process+\"%\"'></span>\n</div>\n\n<div class=\"tips\">\n    郑重声明：本项目使用的地图数据中未包含的南海等岛屿和领海都属于中国领土~\n</div>\n"
+    __etcpack__scope_bundle__.default= "<div class=\"view\">\n    <header>\n        新型冠状病毒肺炎\n        <span>\n            COVID-19\n        </span>\n    </header>\n    <div>\n        <div id=\"map\"></div>\n        <div class=\"hover\" ui-bind:style='\"left:\"+left+\"px;top:\"+top+\"px;\"' ui-bind:show='flag?\"yes\":\"no\"'>\n            <h2 ui-bind='title'></h2>\n            <ul id='hover-list'></ul>\n        </div>\n    </div>\n    <table class=\"rumors\">\n        <thead>\n            <tr>\n                <th>序号</th>\n                <th>标题</th>\n                <th>内容</th>\n                <th>解释</th>\n            </tr>\n        </thead>\n        <tbody ui-rumors=\"rumors\"></tbody>\n    </table>\n</div>\n\n<div class=\"process\" ui-bind:load='hadLoad?\"yes\":\"no\"'>\n    <span class='icon'>\n        <i ui-bind:style='\"width:\"+process+\"%\"'></i>\n    </span>\n    <br />\n    <span ui-bind='\"统计数据载入中：\"+process+\"%\"'></span>\n</div>\n\n<div class=\"tips\">\n    郑重声明：本项目使用的地图数据中未包含的南海等岛屿和领海都属于中国领土~\n</div>\n"
   
     return __etcpack__scope_bundle__;
 }
@@ -4028,6 +4057,64 @@ var _class = (_dec = Directive({
       }
 
       xhtml.bind(el, types[0], callback);
+    }
+  }]);
+
+  return _class2;
+}()) || _class2);
+
+__etcpack__scope_bundle__.default=_class;
+  
+    return __etcpack__scope_bundle__;
+}
+
+/*************************** [bundle] ****************************/
+// Original file:./src/directives/ui-rumors.ts
+/*****************************************************************/
+window.__etcpack__bundleSrc__['32']=function(){
+    var __etcpack__scope_bundle__={};
+    var __etcpack__scope_args__;
+    var _dec, _class2;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+__etcpack__scope_args__=window.__etcpack__getBundle('1');
+var Directive=__etcpack__scope_args__.Directive;
+
+
+var update = function update(el, binding) {
+  if (binding.value && binding.value.success) {
+    var template = "";
+
+    for (var index in binding.value.results) {
+      var rumor = binding.value.results[index];
+      template += " <tr>\n            <th>".concat(+index + 1, "</th>\n            <th>").concat(rumor.title, "</th>\n            <th style=\"width:300px\">").concat(rumor.body, "</th>\n            <th>").concat(rumor.mainSummary, "</th>\n        </tr>");
+    }
+
+    el.innerHTML = template;
+  }
+};
+
+var _class = (_dec = Directive({
+  selector: "ui-rumors"
+}), _dec(_class2 = /*#__PURE__*/function () {
+  function _class2() {
+    _classCallCheck(this, _class2);
+  }
+
+  _createClass(_class2, [{
+    key: "$inserted",
+    value: function $inserted(el, binding) {
+      update(el, binding);
+    }
+  }, {
+    key: "$update",
+    value: function $update(el, binding) {
+      update(el, binding);
     }
   }]);
 

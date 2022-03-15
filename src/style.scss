@@ -38,3 +38,48 @@ body {
     }
 
 }
+
+// 谣言
+.rumors {
+    width: 90%;
+    margin: auto;
+    line-height: 20px;
+    margin-top: 50px;
+
+    thead {
+        white-space: nowrap;
+
+        &>tr {
+            background-color: #c1bcbc;
+            border: 1px solid #c1bcbc;
+            color: #fff;
+        }
+    }
+
+    tbody {
+        &>tr {
+            &>* {
+                border-width: 0 1px 1px 0;
+                border-style: solid;
+                border-color: #c1bcbc;
+
+                &:first-child {
+                    border-width: 0 1px 1px 1px;
+                }
+            }
+
+            &:nth-child(2n) {
+                background-color: #F5F5F5;
+            }
+
+            &:nth-child(2n+1) {
+                background-color: #fff;
+            }
+        }
+    }
+
+    th {
+        font-size: 12px;
+        padding-left: 1em;
+    }
+}

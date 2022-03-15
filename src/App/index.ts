@@ -25,6 +25,7 @@ export default class {
     left: number
     top: number
     title: any
+    rumors: any
 
     $setup() {
         return {
@@ -33,7 +34,8 @@ export default class {
             flag: ref(false),
             left: ref(0),
             top: ref(0),
-            title: ref('')
+            title: ref(''),
+            rumors: ref({})
         }
     }
 
@@ -86,6 +88,27 @@ export default class {
         })
     }
 
+    getRumorsData() {
+        let data = sessionStorage.getItem("covid-19/rumors")
+        if (data) {
+            this.rumors = JSON.parse(data)
+            return
+        }
+
+        xhr({
+            method: "GET",
+            url: "https://lab.isaaclin.cn/nCoV/api/rumors",
+            timeout: 60000
+        }, data => {
+
+            this.rumors = JSON.parse(data.data)
+            sessionStorage.setItem("covid-19/rumors", data.data);
+
+        }, (error) => {
+            console.error(error)
+        })
+    }
+
     $mounted() {
 
         let _this = this
@@ -132,8 +155,6 @@ export default class {
                     let curData = data.chinaData[_cityName]
                     let _title = _cityName + "(" + curData.currentConfirmedCount + ")"
 
-                    console.log(curData)
-
                     // 右边有空余的地方就右边显示，不然去左边
                     _this.left = target.left > (this._width * 0.5) ? (target.left - 310) : (target.left + 10)
                     _this.top = target.top - curData.cities.length * 5
@@ -158,6 +179,8 @@ export default class {
             })
 
         })
+
+        this.getRumorsData()
 
     }
 

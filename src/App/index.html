@@ -8,10 +8,21 @@
     <div>
         <div id="map"></div>
         <div class="hover" ui-bind:style='"left:"+left+"px;top:"+top+"px;"' ui-bind:show='flag?"yes":"no"'>
-            <h2 ui-bind='title'>简单</h2>
+            <h2 ui-bind='title'></h2>
             <ul id='hover-list'></ul>
         </div>
     </div>
+    <table class="rumors">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>标题</th>
+                <th>内容</th>
+                <th>解释</th>
+            </tr>
+        </thead>
+        <tbody ui-rumors="rumors"></tbody>
+    </table>
 </div>
 
 <div class="process" ui-bind:load='hadLoad?"yes":"no"'>
